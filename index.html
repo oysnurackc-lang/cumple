@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Cumpleaños, Mi Amor ❤️</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Estilos globales y fuentes */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at center, #1e0915 0%, #0a0307 100%);
+      color: #fce7f3;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .font-serif-custom {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Animación de pulso al hacer clic */
+    @keyframes heartbeatClick {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.18); }
+      60% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+
+    /* Latido continuo tenue */
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.2)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.6)); }
+    }
+
+    .animate-heartbeat {
+      animation: gentlePulse 2.5s infinite ease-in-out;
+    }
+
+    .heart-click-active {
+      animation: heartbeatClick 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+
+    /* Animación de apertura/estallido del corazón */
+    @keyframes heartBurst {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+      50% { transform: scale(1.6) rotate(-10deg); filter: brightness(1.8) drop-shadow(0 0 50px #ff2a5f); opacity: 0.9; }
+      100% { transform: scale(3.5) rotate(15deg); filter: brightness(3); opacity: 0; }
+    }
+
+    .animate-burst {
+      animation: heartBurst 1.2s ease-out forwards;
+    }
+
+    /* Resplandor flotante en la tarjeta */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 182, 193, 0.18);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(244, 63, 94, 0.15);
+    }
+
+    /* Emojis flotantes */
+    .floating-emoji {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      animation: floatUp linear infinite;
+      z-index: 10;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(110vh) scale(0.5) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.8;
+      }
+      85% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1.2) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Glow continuo alrededor de la foto */
+    @keyframes borderGlow {
+      0%, 100% { border-color: rgba(244, 63, 94, 0.8); box-shadow: 0 0 25px rgba(244, 63, 94, 0.4), inset 0 0 15px rgba(244, 63, 94, 0.3); }
+      50% { border-color: rgba(251, 113, 133, 0.9); box-shadow: 0 0 45px rgba(244, 63, 94, 0.7), inset 0 0 25px rgba(251, 113, 133, 0.5); }
+    }
+
+    .photo-glow {
+      animation: borderGlow 4s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center relative min-h-screen p-4 selection:bg-rose-500 selection:text-white">
+
+  <!-- Contenedor de Emojis Flotantes de Fondo -->
+  <div id="emojiContainer" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+  <!-- ==================== PANTALLA 1: EL CORAZÓN INTERACTIVO ==================== -->
+  <main id="screen1" class="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl text-center transition-all duration-700">
+    
+    <!-- Título superior e instrucciones iniciales -->
+    <div id="instructionHeader" class="transition-opacity duration-500 mb-6">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-rose-950/60 border border-rose-500/30 text-rose-300 text-xs font-semibold tracking-widest uppercase mb-3 shadow-lg">
+        Una sorpresa especial para ti 🤍
+      </span>
+      <h1 class="text-3xl md:text-5xl font-serif-custom font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-pink-300 to-rose-400 mb-2">
+        Llena el corazón de amor
+      </h1>
+      <p class="text-rose-200/70 text-sm md:text-base font-light max-w-md mx-auto">
+        Haz clic en el corazón hasta llenarlo de vida y descubrir lo que guarda para ti.
+      </p>
+    </div>
+
+    <!-- Contenedor del Corazón SVG -->
+    <div class="relative my-6 flex flex-col items-center justify-center">
+      
+      <!-- Indicador numérico/porcentaje flotante -->
+      <div id="progressBadge" class="absolute -top-4 text-xs font-bold px-3 py-1 rounded-full bg-rose-900/80 border border-rose-500/40 text-rose-200 shadow-lg backdrop-blur-md transition-all duration-300">
+        <span id="clickCounterText">0</span> / <span id="maxClicksText">6</span>
+      </div>
+
+      <!-- SVG del Corazón con Relleno Gradual -->
+      <div id="heartWrapper" class="cursor-pointer select-none transform transition-transform active:scale-95 duration-150 animate-heartbeat p-4">
+        <svg id="heartSvg" class="w-48 h-48 md:w-64 md:h-64 filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.8)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Gradiente de llenado interactivo (cambia de bajo a alto según clics) -->
+            <linearGradient id="heartGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <!-- Parada 1: Color vivo que sube -->
+              <stop id="stopFilled" offset="0%" stop-color="#ff2a5f" />
+              <!-- Parada 2: Transición rápida -->
+              <stop id="stopMiddle" offset="0%" stop-color="#ff2a5f" />
+              <!-- Parada 3: Fondo gris oscuro base -->
+              <stop id="stopEmpty" offset="0%" stop-color="#374151" />
+            </linearGradient>
+
+            <!-- Brillo de iluminación en el borde del corazón -->
+            <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ff2a5f" flood-opacity="0.6"/>
+            </filter>
+          </defs>
+
+          <!-- Trazo del Corazón -->
+          <path 
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+            fill="url(#heartGradient)"
+            stroke="rgba(255, 182, 193, 0.4)"
+            stroke-width="0.8"
+          />
+        </svg>
+      </div>
+
+      <!-- Barra de progreso lineal elegante -->
+      <div id="progressBarContainer" class="w-48 md:w-64 h-1.5 bg-gray-800/80 rounded-full overflow-hidden border border-rose-900/30 mt-2 shadow-inner">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-rose-500 to-pink-400 w-0 transition-all duration-300"></div>
+      </div>
+
+    </div>
+
+    <!-- CARTA ROMÁNTICA (Oculta al inicio, se revela tras estallar el corazón) -->
+    <div id="letterCard" class="hidden opacity-0 scale-90 transition-all duration-700 ease-out w-full glass-card p-6 md:p-8 rounded-2xl text-left my-4 relative overflow-hidden">
+      
+      <!-- Adorno de esquina superior -->
+      <div class="absolute -top-12 -right-12 w-28 h-28 bg-rose-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-300">
+          <i class="fa-solid font-bold text-lg">💌</i>
+        </div>
+        <div>
+          <h2 class="font-serif-custom text-2xl md:text-3xl font-bold text-rose-100">Para mi cumpleañera favorita</h2>
+          <p class="text-xs text-rose-300/80"></p>
+        </div>
+      </div>
+
+      <!-- Mensaje Romántico Personalizable -->
+      <div class="space-y-3 text-rose-100/90 text-sm md:text-base leading-relaxed font-light">
+        <p>
+          ¡Feliz Cumpleaños, mi amor! 🎉✨
+        </p>
+        <p>
+          Hoy celebramos tu cumple lejos pero en menos de un mes estaremos juntos celebrándolo!!
+        </p>
+		<p>
+		  Me hace muy feliz poder estar contigo felicitándote por segundo año y espero que sean muchos más!!
+		</p>
+        <p>
+          Espero que disfrutes mucho, que seas muy feliz y que todo te vaya muy bien este año.
+        </p>
+        <p class="font-serif-custom italic text-rose-300 pt-2 font-medium">
+          ❤️❤️❤️¡¡¡¡¡¡¡¡¡¡¡TE QUIERO MUCHOO!!!!!!!!!!❤️❤️❤️
+        </p>
+      </div>
+
+      <!-- Botón para pasar a la Pantalla 2 -->
+      <div class="mt-8 pt-4 border-t border-rose-500/20 flex justify-end">
+        <button id="btnToScreen2" class="group relative px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 text-white font-semibold text-sm shadow-[0_4px_20px_rgba(244,63,94,0.4)] hover:shadow-[0_6px_25px_rgba(244,63,94,0.6)] transform hover:-translate-y-0.5 transition-all duration-200 flex items-center space-x-2">
+          <span></span>
+          <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== PANTALLA 2: GALERÍA Y FOTO ESPECIAL ==================== -->
+  <section id="screen2" class="hidden opacity-0 z-10 flex flex-col items-center justify-center w-full max-w-xl text-center transition-all duration-700 py-8">
+    
+    <!-- Encabezado de la pantalla 2 -->
+    <div class="mb-6 space-y-2">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-rose-950/70 border border-rose-400/40 text-pink-300 text-xs font-semibold tracking-widest uppercase shadow-md">
+        Un foto muy especial 🎂
+      </span>
+      <h2 class="text-3xl md:text-4xl font-serif-custom font-bold text-rose-100">
+        FELIZ CUMPLEAÑOS 🎉
+      </h2>
+      <p class="text-rose-200/70 text-xs md:text-sm">
+        
+      </p>
+    </div>
+
+    <!-- Contenedor del Marco de la Foto Elegante (CUADRADO 1:1) -->
+    <div class="relative group my-4 w-full max-w-xs md:max-w-sm mx-auto">
+      
+      <!-- Adorno de brillo posterior flotante -->
+      <div class="absolute -inset-1.5 bg-gradient-to-r from-rose-500 via-pink-400 to-amber-300 rounded-[2rem] blur-xl opacity-70 group-hover:opacity-90 transition duration-500"></div>
+
+      <!-- Marco de la foto Cuadrado -->
+      <div class="relative glass-card p-3 md:p-4 rounded-[2rem] photo-glow border-2 border-rose-400/50">
+        <div class="overflow-hidden rounded-2xl relative w-full aspect-square shadow-2xl bg-rose-950/50 flex items-center justify-center">
+          <img 
+            id="couplePhoto" 
+            src="https://raw.githubusercontent.com/oysnurackc-lang/foto/refs/heads/main/WhatsApp%20Image%202026-11-09%20at%2012.42.06.jpeg" 
+            alt="Ilustración Shin-chan y tarta de cumpleaños"
+            class="w-full h-full object-cover aspect-square transform group-hover:scale-105 transition-transform duration-700 ease-out"
+            onerror="this.src='https://placehold.co/800x800/2a0815/ff85a1?text=Tu+Foto+con+Shin-chan+y+Tarta+🎂'"
+          />
+          
+          <!-- Sombra interior en la parte inferior de la imagen con pie de foto -->
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 pt-10 text-left">
+            <p class="text-xs text-rose-300 font-medium tracking-wide uppercase">¡Que cumplas muchos más!</p>
+            <p class="text-sm font-serif-custom text-white font-semibold">Y que sean a mi lado</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emojis decorativos fijos en las esquinas del marco -->
+      <div class="absolute -top-4 -left-4 text-3xl filter drop-shadow-md animate-bounce" style="animation-duration: 3s;">🎂</div>
+      <div class="absolute -top-4 -right-4 text-3xl filter drop-shadow-md animate-bounce" style="animation-duration: 2.3s;">✨</div>
+      <div class="absolute -bottom-4 -left-4 text-3xl filter drop-shadow-md animate-bounce" style="animation-duration: 3.2s;">🎈</div>
+      <div class="absolute -bottom-4 -right-4 text-3xl filter drop-shadow-md animate-bounce" style="animation-duration: 2.7s;">🍬</div>
+    </div>
+
+  </section>
+
+
+  <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
+  <script>
+    // Configuración general
+    const TOTAL_CLICKS = 6; // Número de clics necesarios para rellenar completamente
+    let currentClicks = 0;
+    let isCompleted = false;
+
+    // Elementos del DOM
+    const heartSvg = document.getElementById('heartSvg');
+    const heartWrapper = document.getElementById('heartWrapper');
+    const stopFilled = document.getElementById('stopFilled');
+    const stopMiddle = document.getElementById('stopMiddle');
+    const stopEmpty = document.getElementById('stopEmpty');
+    const clickCounterText = document.getElementById('clickCounterText');
+    const maxClicksText = document.getElementById('maxClicksText');
+    const progressBar = document.getElementById('progressBar');
+    const progressBarContainer = document.getElementById('progressBarContainer');
+    const progressBadge = document.getElementById('progressBadge');
+    const instructionHeader = document.getElementById('instructionHeader');
+    const letterCard = document.getElementById('letterCard');
+    
+    const screen1 = document.getElementById('screen1');
+    const screen2 = document.getElementById('screen2');
+    const btnToScreen2 = document.getElementById('btnToScreen2');
+    const emojiContainer = document.getElementById('emojiContainer');
+
+    // Inicializar límites en la interfaz
+    maxClicksText.textContent = TOTAL_CLICKS;
+
+    // Generar emojis flotantes continuos de fondo (incluye tarta y globos)
+    const EMOJIS = ['❤️', '💖', '✨', '🌸', '👑', '⭐', '🎂', '🎈', '🍬', '🍫'];
+    function spawnFloatingEmoji() {
+      const emojiEl = document.createElement('div');
+      emojiEl.className = 'floating-emoji';
+      emojiEl.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      
+      // Posición horizontal y velocidad aleatoria
+      const leftPos = Math.random() * 100;
+      const duration = 6 + Math.random() * 7; // entre 6 y 13s
+      const size = 0.8 + Math.random() * 1.2; // escala entre 0.8 y 2rem
+
+      emojiEl.style.left = `${leftPos}vw`;
+      emojiEl.style.animationDuration = `${duration}s`;
+      emojiEl.style.fontSize = `${size}rem`;
+
+      emojiContainer.appendChild(emojiEl);
+
+      // Eliminar el elemento tras terminar la animación
+      setTimeout(() => {
+        emojiEl.remove();
+      }, duration * 1000);
+    }
+
+    // Iniciar lluvia de emojis ligera al cargar
+    setInterval(spawnFloatingEmoji, 800);
+
+    // Evento al hacer clic en el corazón
+    heartWrapper.addEventListener('click', () => {
+      if (isCompleted) return;
+
+      currentClicks++;
+      const progressPercent = Math.min((currentClicks / TOTAL_CLICKS) * 100, 100);
+
+      // Actualizar visualización numérica y barra
+      clickCounterText.textContent = currentClicks;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Actualizar el gradiente SVG del corazón
+      stopFilled.setAttribute('offset', `${progressPercent}%`);
+      stopMiddle.setAttribute('offset', `${progressPercent}%`);
+      stopEmpty.setAttribute('offset', `${progressPercent}%`);
+
+      // Efecto de latido fuerte en el clic
+      heartWrapper.classList.remove('heart-click-active');
+      // Forzar reflow para reiniciar la animación CSS
+      void heartWrapper.offsetWidth; 
+      heartWrapper.classList.add('heart-click-active');
+
+      // Crear pequeños destellos/partículas en cada clic
+      triggerMiniBurst();
+
+      // Verificar si se completó el 100%
+      if (currentClicks >= TOTAL_CLICKS) {
+        completeHeartPhase();
+      }
+    });
+
+    // Pequeño brote de confeti/corazones con cada clic individual
+    function triggerMiniBurst() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 12,
+          spread: 40,
+          origin: { y: 0.55 },
+          colors: ['#ff2a5f', '#ff85a1', '#fb7185'],
+          disableForReducedMotion: true
+        });
+      }
+    }
+
+    // Función ejecutada cuando se llena completamente el corazón
+    function completeHeartPhase() {
+      isCompleted = true;
+
+      // Ocultar indicadores de clics gradualmente
+      progressBadge.style.opacity = '0';
+      progressBarContainer.style.opacity = '0';
+      instructionHeader.style.opacity = '0';
+
+      setTimeout(() => {
+        progressBadge.classList.add('hidden');
+        progressBarContainer.classList.add('hidden');
+        instructionHeader.classList.add('hidden');
+      }, 400);
+
+      // Iniciar la animación de gran explosión/apertura del corazón
+      heartWrapper.classList.remove('animate-heartbeat');
+      heartWrapper.classList.add('animate-burst');
+
+      // Estallido masivo de confeti y corazones
+      setTimeout(() => {
+        launchBigConfetti();
+        
+        // Ocultar el corazón y mostrar la carta romántica
+        heartWrapper.style.display = 'none';
+        
+        letterCard.classList.remove('hidden');
+        // Pequeño delay para la animación suave de entrada (fade-in & scale)
+        setTimeout(() => {
+          letterCard.classList.remove('opacity-0', 'scale-90');
+          letterCard.classList.add('opacity-100', 'scale-100');
+        }, 50);
+
+      }, 1000);
+    }
+
+    // Configuración de la gran explosión de confeti y corazones
+    function launchBigConfetti() {
+      if (typeof confetti !== 'function') return;
+
+      const duration = 3.5 * 1000;
+      const animationEnd = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#ff4b72', '#ff85a1', '#ffd1dc', '#ffffff']
+        });
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#ff4b72', '#ff85a1', '#ffd1dc', '#ffffff']
+        });
+
+        if (Date.now() < animationEnd) {
+          requestAnimationFrame(frame);
+        }
+      };
+
+      frame();
+    }
+
+    // Transición a la Pantalla 2 (Foto Especial)
+    btnToScreen2.addEventListener('click', () => {
+      screen1.classList.add('opacity-0', '-translate-y-6');
+      
+      setTimeout(() => {
+        screen1.classList.add('hidden');
+        
+        screen2.classList.remove('hidden');
+        setTimeout(() => {
+          screen2.classList.remove('opacity-0');
+          screen2.classList.add('opacity-100');
+        }, 50);
+
+        // Aumentar la frecuencia de emojis flotantes en la pantalla de fotos
+        setInterval(spawnFloatingEmoji, 400);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
